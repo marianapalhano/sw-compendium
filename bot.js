@@ -26,7 +26,24 @@ client.on('messageCreate', msg => {
 
             api.get("/people/?search="+args[1])
             .then((response) => {
-                msg.reply(response.data.results[0].name)
+                
+                for (let i = 0; i < response.data.results.length; i++) {
+                    let planet = response.data.results[i].homeworld;
+                    
+                    api.get(planet.substring(22, planet.length)).then((planetRes) => {
+                        msg.reply(`
+Name: ${response.data.results[i].name}
+Height: ${response.data.results[i].height}
+Weight: ${response.data.results[i].mass}
+Hair color: ${response.data.results[i].hair_color}
+Skin color: ${response.data.results[i].skin_color}
+Eye color: ${response.data.results[i].eye_color}
+Birth year: ${response.data.results[i].birth_year}
+Home planet: ${planetRes.data.name}
+                        `);
+                    });
+
+                }                
             })
             .catch((err) => {
               console.error("ops! ocorreu um erro" + err);
